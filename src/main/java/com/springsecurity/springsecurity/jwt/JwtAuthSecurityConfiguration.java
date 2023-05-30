@@ -1,5 +1,8 @@
 package com.springsecurity.springsecurity.jwt;
 
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.source.JWKSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -102,6 +105,13 @@ public class JwtAuthSecurityConfiguration {
                 .privateKey(keyPair.getPrivate())
                 .keyID(UUID.randomUUID().toString())
                 .build();
+    }
+
+    @Bean
+    public JWKSource jwkSource(RSAKey rsaKey) {
+        var jwkSet = new JWKSet((JWK) rsaKey);
+
+        return (jwkSelector, context) -> jwkSelector.select(jwkSet);
     }
 
 
