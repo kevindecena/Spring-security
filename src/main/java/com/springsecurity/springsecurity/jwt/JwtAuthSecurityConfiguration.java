@@ -3,8 +3,6 @@ package com.springsecurity.springsecurity.jwt;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,12 +20,10 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAKey;
-import java.security.interfaces.RSAPublicKey;
-import java.util.UUID;
 
-@Configuration
+//@RestController
 public class JwtAuthSecurityConfiguration {
-    @Bean
+    //@Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(
                 auth -> {
@@ -52,7 +48,7 @@ public class JwtAuthSecurityConfiguration {
     }
 
 
-    @Bean
+    //Bean
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
@@ -60,7 +56,7 @@ public class JwtAuthSecurityConfiguration {
                 .build();
     }
 
-    @Bean
+    //@Bean
     public UserDetailsService userDetailsService(DataSource dataSource) {
 
         var user = User.withUsername("in28minutes")
@@ -85,12 +81,12 @@ public class JwtAuthSecurityConfiguration {
         return jdbcUserDetailsManager;
     }
 
-    @Bean
+    //@Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
+    //@Bean
     public KeyPair keyPair() throws NoSuchAlgorithmException {
         var keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(2048);
@@ -98,16 +94,16 @@ public class JwtAuthSecurityConfiguration {
         return keyPairGenerator.generateKeyPair();
     }
 
-    @Bean
-    public RSAKey rsaKey(KeyPair keyPair) {
-        return new RSAKey
-                .Builder((RSAPublicKey) keyPair.getPublic())
-                .privateKey(keyPair.getPrivate())
-                .keyID(UUID.randomUUID().toString())
-                .build();
-    }
+//    @Bean
+//    public RSAKey rsaKey(KeyPair keyPair) {
+//        return new RSAKey
+//                .Builder((RSAPublicKey) keyPair.getPublic())
+//                .privateKey(keyPair.getPrivate())
+//                .keyID(UUID.randomUUID().toString())
+//                .build();
+//    }
 
-    @Bean
+    //@Bean
     public JWKSource jwkSource(RSAKey rsaKey) {
         var jwkSet = new JWKSet((JWK) rsaKey);
 

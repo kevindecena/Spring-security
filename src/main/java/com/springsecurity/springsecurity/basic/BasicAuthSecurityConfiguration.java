@@ -1,6 +1,7 @@
 package com.springsecurity.springsecurity.basic;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,13 +15,16 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import javax.sql.DataSource;
 
-//@Configuration
+@Configuration
 public class BasicAuthSecurityConfiguration {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(
                 auth -> {
-                    auth.anyRequest().authenticated();
+                    auth
+                            .requestMatchers("/user").hasRole("USER")
+                            .requestMatchers("/admin").hasRole("ADMIN")
+                            .anyRequest().authenticated();
                 }
         );
         http.sessionManagement(
